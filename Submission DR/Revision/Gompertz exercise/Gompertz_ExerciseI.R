@@ -13,8 +13,8 @@ library(ggplot2)
 
 getHMDcountries()
 XYZ <- c('FRATNP','SWE')
-us <- "jmaburto@colmex.mx"
-pw <- "kolmogorov"
+us <- "jmaburto@..."
+pw <- "..."
 
 HMDL <- do.call(rbind,lapply(XYZ, function(x, us, pw){
   cat(x,"\n")
@@ -109,78 +109,47 @@ Results[,Country:= ifelse(PopName == 'FRATNP', 'France', 'Sweden')]
 #Plot
 
 
+theme_set(
+  theme_bw(base_size = 20)+
+    theme(axis.title = element_text(size = 20),
+          axis.ticks = element_line(color = "grey", size = .5),
+          axis.ticks.length = unit(.5, "line"),
+          # panel.grid = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.title.y = element_text(vjust = 3),
+          panel.border = element_rect(color = "grey90", fill = NA, size = .5),
+          line = element_line(lineend = "round"))
+)
+
 f1 <- ggplot(Results)+
   geom_line(aes(Year, delta), size =1)+
-  theme_bw()+
   facet_grid(. ~ Country)+
-  #scale_y_continuous(expand=c(0,0), limits = c(.6,.92))+
+  theme_bw()+
+  #coord_cartesian(ylim = c(20,90))+
+  scale_y_continuous(expand=c(0,0))+
   scale_x_continuous(expand=c(0,0))+
+  theme(strip.background = element_rect(fill="white"))+
   theme(strip.background = element_rect(fill="white"))+
   theme(legend.title=element_blank(), 
         panel.background = element_blank(),
         #panel.grid.major = element_blank(),
         #panel.grid.minor = element_blank(),
         strip.background = element_blank(),
-        panel.border = element_rect(colour = "black"),
         legend.position = "right",
-        #axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.spacing = unit(2, "lines"))+
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        panel.spacing = unit(2, "lines"),
+        axis.title = element_text( size = 20),
+        axis.ticks = element_line(color = "grey", size = .5),
+        axis.ticks.length = unit(.5, "line"),
+        # panel.grid = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.title.y = element_text(vjust = 3),
+        panel.border = element_rect(color = "grey90", fill = NA, size = .5),
+        line = element_line(lineend = "round"))+
   xlab("Year") +
   ylab(quote(delta))
-f1
-
 
 pdf(file="Figure_delta.pdf",width=11,height=5,pointsize=6,useDingbats = F)
 print(f1)
 dev.off()
-
-
-f2 <- ggplot(Results)+
-  geom_line(aes(Year, delta.e0G), size =1)+
-  theme_bw()+
-  facet_grid(. ~ Country)+
-  #scale_y_continuous(expand=c(0,0), limits = c(.6,.92))+
-  scale_x_continuous(expand=c(0,0))+
-  theme(strip.background = element_rect(fill="white"))+
-  theme(legend.title=element_blank(), 
-        panel.background = element_blank(),
-        #panel.grid.major = element_blank(),
-        #panel.grid.minor = element_blank(),
-        strip.background = element_blank(),
-        panel.border = element_rect(colour = "black"),
-        legend.position = "right",
-        #axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.spacing = unit(2, "lines"))+
-  xlab("Year") +
-  ylab(quote(delta))
-f2
-
-
-data2 <- HMDL[ HMDL$Age %in% 30:100,]
-
-data3 <- data2[, list(muertes = sum(dx)/100000), by = list(PopName,Sex,Year)]
-
-
-f3 <- ggplot(data3)+
-  geom_line(aes(Year, muertes), size =1)+
-  theme_bw()+
-  facet_grid(. ~ PopName)+
-  #scale_y_continuous(expand=c(0,0), limits = c(.6,.92))+
-  scale_x_continuous(expand=c(0,0))+
-  theme(strip.background = element_rect(fill="white"))+
-  theme(legend.title=element_blank(), 
-        panel.background = element_blank(),
-        #panel.grid.major = element_blank(),
-        #panel.grid.minor = element_blank(),
-        strip.background = element_blank(),
-        panel.border = element_rect(colour = "black"),
-        legend.position = "right",
-        #axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.spacing = unit(2, "lines"))+
-  xlab("Year") +
-  ylab(quote(delta))
-f3
-
-
-
-
